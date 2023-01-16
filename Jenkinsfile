@@ -1,4 +1,4 @@
-pipeline{
+pipeine{
     agent any
     
     tools{
@@ -7,23 +7,23 @@ pipeline{
         maven "MAVEN_HOME"
     }
     
-     stages{	
-    	stage('UNIT TEST'){
+     stages{    
+        stage('UNIT TEST'){
             steps {
-            	withEnv(["JAVA_HOME=${tool 'JAVA_HOME'}"]) {
-    			  // build steps go here
-    			  sh 'mvn test'
-    			}
+                withEnv(["JAVA_HOME=${tool 'JAVA_HOME'}"]) {
+                  // build steps go here
+                  sh 'mvn test'
+                }
                 
             }
         }
 
-	   stage('INTEGRATION TEST'){
+       stage('INTEGRATION TEST'){
             steps {
-            	withEnv(["JAVA_HOME=${tool 'JAVA_HOME'}"]) {
-    			  // build steps go here
-    			  sh 'mvn verify -DskipUnitTests'
-    			}
+                withEnv(["JAVA_HOME=${tool 'JAVA_HOME'}"]) {
+                  // build steps go here
+                  sh 'mvn verify -DskipUnitTests'
+                }
                 
             }
         }
@@ -52,20 +52,21 @@ pipeline{
 
 
         }
-	 
-	     stage('Build docker')
+     
+         stage('Build docker')
         {
-    steps{
-        script{
-            sh 'docker build . $registry+:$BUILD_NUMBER'
-            withCredentials([string(credentialsId: 'dockerpasswd', variable: 'dockerpwd')]) {
-               docker login -u nikhildevops38 -p dockerpwd
-               docker push $registry:$BUILD_NUMBER
+           steps{
+             script{
+              sh 'docker build . $registry+:$BUILD_NUMBER'
+              withCredentials([string(credentialsId: 'dockerpasswd', variable: 'dockerpwd')]) {
+                 docker login -u nikhildevops38 -p dockerpwd
+                 docker push $registry:$BUILD_NUMBER
                     
+                       }
+                   }
+           }
+         }
+           
         }
-}
-}
-
-        }
-    	
+        
      }
