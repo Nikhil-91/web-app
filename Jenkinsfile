@@ -52,6 +52,19 @@ pipeline{
 
 
         }
+	 
+	     stage('Build docker')
+        {
+    steps{
+        script{
+            sh 'docker build . $registry+:$BUILD_NUMBER'
+            withCredentials([string(credentialsId: 'dockerpasswd', variable: 'dockerpwd')]) {
+               docker login -u nikhildevops38 -p dockerpwd
+               docker push $registry:$BUILD_NUMBER
+                    
+        }
+}
+}
 
         }
     	
