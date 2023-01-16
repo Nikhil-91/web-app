@@ -6,6 +6,9 @@ pipeine{
         jdk "JAVA_11"
         maven "MAVEN_HOME"
     }
+    environment{
+      registry=nikhildevops38/webapp   
+    }
     
      stages{    
         stage('UNIT TEST'){
@@ -57,7 +60,7 @@ pipeine{
         {
            steps{
              script{
-              sh 'docker build . $registry+:$BUILD_NUMBER'
+              sh 'docker build . registry+:BUILD_NUMBER'
               withCredentials([string(credentialsId: 'dockerpasswd', variable: 'dockerpwd')]) {
                  docker login -u nikhildevops38 -p dockerpwd
                  docker push $registry:$BUILD_NUMBER
